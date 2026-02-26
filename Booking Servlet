@@ -1,0 +1,40 @@
+package servlet;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.sql.*;
+import db.DBConnection;
+
+public class BookingServlet extends HttpServlet {
+
+protected void doPost(HttpServletRequest req,
+HttpServletResponse res)
+throws ServletException, IOException {
+
+HttpSession session=req.getSession();
+
+String user=(String)session.getAttribute("user");
+String movie=req.getParameter("movie");
+String seat=req.getParameter("seat");
+
+try{
+Connection con=DBConnection.getConnection();
+
+PreparedStatement ps=
+con.prepareStatement(
+"insert into booking(user_email,movie_name,seat_no,amount) values(?,?,?,200)");
+
+ps.setString(1,user);
+ps.setString(2,movie);
+ps.setString(3,seat);
+
+ps.executeUpdate();
+
+res.sendRedirect("ticket.jsp");
+
+}catch(Exception e){
+e.printStackTrace();
+}
+}
+}
